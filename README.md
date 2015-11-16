@@ -1,6 +1,7 @@
 # Davis-RUG-Pres
-**by: Ryan Peek**
-*for: the Davis R Users Group (2015-Nov-18)*
+
+by: **Ryan Peek**  
+for: *Davis R Users Group (2015-Nov-18)*
 
 ## Short Presentation on Using Shiny & Markdown
 
