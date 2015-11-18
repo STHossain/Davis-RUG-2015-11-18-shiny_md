@@ -4,8 +4,7 @@ author: "Ryan Peek"
 date: "November 18, 2015"
 output:
   ioslides_presentation:
-    incremental: no
-    logo: cws_logo_www.gif
+    logo: www/cws_logo_www.gif
     theme: readable
     widescreen: yes
 runtime: shiny
@@ -64,7 +63,7 @@ plot(cars,pch=21,bg="skyblue",main="a super exciting plot")
 
  - *Random figure for comic levity...*
 
-![gettingPHD](phd053012s.gif)
+![gettingPHD](www/phd053012s.gif)
 
 ## Shiny Examples | Interactive Selections
 
@@ -326,7 +325,7 @@ shinyApp(
  - just make sure to add a break line between left and right cols  
 
 
-![A Lazy fox](sleeping_fox.jpg)
+![A Lazy fox](www/sleeping_fox.jpg)
 
  *A lazy fox...*
 
@@ -357,5 +356,5 @@ shinyApp(
  - Email me *rapeek at ucdavis dot edu*
 
  
- ![icecream](scientist-ice-cream.jpg)
+ ![icecream](www/scientist-ice-cream.jpg)
  
