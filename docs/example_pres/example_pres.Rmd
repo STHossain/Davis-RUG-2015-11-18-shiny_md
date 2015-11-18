@@ -4,6 +4,7 @@ author: "Ryan Peek"
 date: "November 18, 2015"
 output:
   ioslides_presentation:
+    highlight: pygments
     logo: www/cws_logo_www.gif
     theme: readable
     widescreen: yes
@@ -49,13 +50,27 @@ The markdown code looks like this:
  Or you can use three ticks to set apart a block of code
  ```
 
+## Make double columns & *Add pictures* {.columns-2}
+
+ - Let's add some text and see how this looks. You can play around with the **style**, *more style*, and even<div class ="blue3">colors!</div>
+ - or add some pictures
+ - just make sure to add a break line between left and right cols  
+
+
+![A Lazy fox](www/sleeping_fox.jpg)
+
+ *A lazy fox...*
+
+
 ## Slide with Plot | This is really exciting
 
 ```{r, echo=FALSE}
 plot(cars,pch=21,bg="skyblue",main="a super exciting plot")
 ```
 
-## Now on to embedding *SHINY* into Slides/HTML
+# Using Shiny to Make Things Interactive!
+
+## Embedding *Shiny* Apps into Slides & HTML
 
  - **HTML** Create a stand-alone html file which retains the dynamic interactive nature of shiny apps, in long document format.
 
@@ -64,6 +79,110 @@ plot(cars,pch=21,bg="skyblue",main="a super exciting plot")
  - *Random figure for comic levity...*
 
 ![gettingPHD](www/phd053012s.gif)
+
+## The Basics of a Shiny App {.smaller}
+
+Examples! Let's use the R base dataset "**ToothGrowth**" which is described as:
+
+ > *The Effect of Vitamin C on Tooth Growth in Guinea Pigs*
+
+```{r echo=T}
+str(ToothGrowth)
+summary(ToothGrowth)
+```
+
+## The Basics of a Shiny App | UI Code {.smaller}
+
+It may seem daunting at first, but start simple and build up!
+First let's look at the **ui** component:
+
+```{r, echo=T, eval=F}
+# a shiny app
+shinyApp(
+  ui <- fluidPage( ## this is the user interface
+    
+    # now the layout options
+    fluidRow( # a row layout
+      column(width = 3, # designate how wide you want (total must = 12)
+             # MANY OPTIONS SEE HELP/EXAMPLES
+             selectInput("var", label="Dose", c(0.5, 1.0, 2.0),
+                         selected = 1, multiple = TRUE),
+             sliderInput("size", label="Point Size", min = 1, max = 6, value = 2, step = 1)
+      ),
+      column(width = 9, # now make a wide chunk to put your plot/output
+             plotOutput("plot") # again, many options here, this is one
+      )
+    )),
+```
+
+## The Basics of a Shiny App | SERVER Code {.smaller}
+
+Now let's look at the **server** component:
+
+```{r, echo=T, eval=F}
+
+  server <- function(input, output) { # now the part that makes the plots
+    
+    output$plot<-renderPlot({ # we are making a plot
+      
+      dat<-ToothGrowth[ToothGrowth$dose==input$var,] # subset data based on input from UI
+      dat$dose<-as.factor(dat$dose) # for plotting purposes
+      
+      # make a plot!
+      ggplot() + geom_point(data=dat, 
+                            aes_string(x="supp", y="len", color="dose"),
+                            size=input$size)+ # this is how you utilize the ui input
+        scale_y_continuous(limits=c(3,33)) + theme_bw() # make plot pretty
+    })
+  }
+)
+      
+```    
+
+
+## The Basics of a Shiny App {.smaller}
+
+Let's use the R base dataset "ToothGrowth" which is described as:
+
+ > The Effect of Vitamin C on Tooth Growth in Guinea Pigs
+
+```{r, echo=F, eval=TRUE}
+# a shiny app
+shinyApp(
+  ui <- fluidPage( ## this is the user interface
+    
+    # now the layout options
+    fluidRow( # a row layout
+      column(width = 3, # designate how wide you want (total must = 12)
+             # MANY OPTIONS SEE HELP/EXAMPLES
+             selectInput("var", label="Dose", c(0.5, 1.0, 2.0),
+                         selected = 1, multiple = TRUE),
+             sliderInput("size", label="Point Size", min = 1, max = 6, value = 2, step = 1)
+      ),
+      column(width = 9, # now make a wide chunk to put your plot/output
+             plotOutput("plot") # again, many options here, this is an example
+      )
+    )),
+  
+  server <- function(input, output) { # now the part that makes the plots
+    output$plot<-renderPlot({
+      
+      dat<-ToothGrowth[ToothGrowth$dose==input$var,]
+      dat$dose<-as.factor(dat$dose)
+      
+      ggplot() + geom_point(data=dat, 
+                            aes_string(x="supp", y="len", color="dose"),
+                            size=input$size)+
+        scale_y_continuous(limits=c(3,33)) + theme_bw()
+    })
+  
+  }
+)
+      
+    
+    
+```    
+
 
 ## Shiny Examples | Interactive Selections
 
@@ -234,6 +353,7 @@ shinyApp(
     
 ```
 
+
 ## Shiny Examples | Leaflet Polygon Map
 
 ```{r, echo=F,  warning=FALSE, message=FALSE}
@@ -246,6 +366,7 @@ leaflet(data = mapStates) %>% addTiles() %>%
   addPolygons(fillColor = topo.colors(10, alpha = NULL), stroke = FALSE)
 
 ```
+
 
 ## Shiny Examples | Leaflet: Add Points/Polys to Map
 
@@ -264,6 +385,7 @@ library(leaflet)
              runif(90, 39, 39.1), runif(90, 10, 500))
 )
 ```
+
 
 ## Shiny Examples: Temperature Data
 
@@ -318,18 +440,9 @@ shinyApp(
 
 ```
 
-## Make double columns & *Add pictures* {.columns-2}
-
- - Let's add some text and see how this looks. You can play around with the **style**, *more style*, and even<div class ="blue3">colors!</div>
- - or add some pictures
- - just make sure to add a break line between left and right cols  
-
-
-![A Lazy fox](www/sleeping_fox.jpg)
-
- *A lazy fox...*
 
 ## Some Shiny Examples & Resources {.smaller}
+
 
 #### Help/Tutorials  
 
@@ -346,7 +459,40 @@ shinyApp(
  - http://shiny.snap.uaf.edu/temp_wind_events/
  - http://shiny.snap.uaf.edu/ak_daily_precipitation/
  - http://blackspot.org.uk/
+
+
+
+## A Word on Slides vs. HTML & YAML
+
+
+ - Depends how you want to communicate/explore data
+ - Reports/Slides can be a single stand-alone **`.html`** file
+ - **YAML**...?
+    + `html_document`, `ioslides_presentation`, `pdf_document`, etc.
  
+```
+---
+title: "Exploring and Presenting with Markdown and Shiny"
+author: "Ryan Peek"
+date: "November 18, 2015"
+output:
+  ioslides_presentation:
+    logo: www/cws_logo_www.gif
+    theme: readable
+    widescreen: yes
+runtime: shiny
+---
+```
+
+```
+html_document:
+    highlight: tango
+    theme: journal
+    toc: yes
+    toc_depth: 2
+runtime: shiny
+```
+
 ## {.columns-2}
 
 **Thanks! Have More Questions?**
