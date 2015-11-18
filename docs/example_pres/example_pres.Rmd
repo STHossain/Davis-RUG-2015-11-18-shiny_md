@@ -147,6 +147,8 @@ Let's use the R base dataset "ToothGrowth" which is described as:
  > The Effect of Vitamin C on Tooth Growth in Guinea Pigs
 
 ```{r, echo=F, eval=TRUE}
+library(ggplot2)
+library(shiny)
 # a shiny app
 shinyApp(
   ui <- fluidPage( ## this is the user interface
@@ -192,7 +194,7 @@ shinyApp(
 library(shiny);library(htmlwidgets); 
 library(ggplot2); library(scales); library(dplyr)
 library(readr); library(lubridate)
-library(DT)
+library(DT); library(ggplot2)
 
 # get data
 load(file = "NFA_merged.RData")
